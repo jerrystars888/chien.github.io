@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Light - Amy's Portfolio</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles and Tailwind Config -->
+    <style>
+        /* 自訂字體 */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        h1, h2, h3, h4, h5, h6, .font-serif {
+            font-family: 'Noto Serif TC', serif;
+        }
+        /* 頁面切換的淡入效果 */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.8s;
+        }
+        .page-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* 作品集圖片hover效果 */
+        .gallery-item .overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .gallery-item:hover .overlay {
+            opacity: 1;
+        }
+         /* 導覽列當前頁面樣式 */
+        .nav-link.active {
+            color: #a16207; /* dark yellow */
+            font-weight: 700;
+        }
+        /* 作品集篩選按鈕當前樣式 */
+        .filter-btn.active {
+           background-color: #a16207;
+           color: white;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <!-- Header -->
+    <header class="bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="flex items-center space-x-2 page-link">
+                <svg class="w-8 h-8 text-yellow-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.553L16.5 21.75l-.398-1.197a3.375 3.375 0 00-2.456-2.456L12.75 18l1.197-.398a3.375 3.375 0 002.456-2.456L16.5 14.25l.398 1.197a3.375 3.375 0 002.456 2.456L20.25 18l-1.197.398a3.375 3.375 0 00-2.456 2.456z" />
+                </svg>
+                <h1 class="text-2xl font-serif font-bold text-yellow-900">First Light</h1>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">首頁</a>
+                <a href="#about" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">關於</a>
+                <a href="#portfolio" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">作品集</a>
+                <a href="#contact" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">聯絡</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-stone-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#home" class="block py-2 nav-link page-link">首頁</a>
+            <a href="#about" class="block py-2 nav-link page-link">關於</a>
+            <a href="#portfolio" class="block py-2 nav-link page-link">作品集</a>
+            <a href="#contact" class="block py-2 nav-link page-link">聯絡</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <!-- Home Section -->
+        <section id="page-home" class="page-section text-center">
+            <div class="min-h-[60vh] flex flex-col justify-center items-center">
+                <h2 class="text-5xl md:text-7xl font-serif text-yellow-900 leading-tight">Amy</h2>
+                <p class="mt-4 text-xl md:text-2xl text-stone-600">畫家・設計師</p>
+                <p class="mt-2 text-lg text-stone-500">I am Amy, a painter and designer from Taiwan.</p>
+                <a href="#contact" class="page-link mt-8 px-8 py-3 bg-yellow-800 text-white font-bold rounded-full hover:bg-yellow-900 transition-all transform hover:scale-105">
+                    聯絡我
+                </a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="page-about" class="page-section">
+            <div class="max-w-4xl mx-auto">
+                 <div class="text-center mb-12">
+                    <h2 class="text-4xl font-serif text-yellow-900">關於我</h2>
+                    <p class="mt-2 text-stone-600">About Me</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center">
+                    <div class="md:col-span-2">
+                        <img src="https://placehold.co/400x500/eab308/3f3f46?text=Amy" alt="Amy的個人照片" class="rounded-lg shadow-xl w-full">
+                    </div>
+                    <div class="md:col-span-3">
+                        <h3 class="text-2xl font-serif text-stone-800">熱衷插畫、速寫、水彩、油畫、陶藝、黏土。</h3>
+                        <p class="fst-italic text-stone-500 mt-2">
+                          Passionate about illustrations, sketches, watercolors, oil paintings, pottery, clay.
+                        </p>
+                        <ul class="mt-6 space-y-2 text-stone-700">
+                            <li><strong>學歷：</strong> <span>設計碩士</span></li>
+                            <li><strong>Degree:</strong> <span>Master's degree in Design</span></li>
+                            <li><strong>經歷：</strong> <span></span></li>
+                            <li><strong>Email:</strong> <span>amy77420@gmail.com</span></li>
+                        </ul>
+                        <p class="mt-6 text-stone-600 leading-relaxed">
+                            透過各種媒材探索美感與故事。從畫布上的油彩到指尖的陶土，每一次創作都是一場與內心的對話。藝術是呈現生命最好的媒材。
+                        </p>
+                        <p class="mt-4 text-stone-500 leading-relaxed">
+                            Exploring beauty and storytelling through a variety of media. From the oil paint on the canvas to the clay on the fingertips, every creation is a dialogue with the heart. Art is the best medium for life.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="page-portfolio" class="page-section">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-serif text-yellow-900">作品集</h2>
+                <p class="mt-2 text-stone-600">My Portfolio</p>
+            </div>
+            
+            <!-- Filters -->
+            <div id="portfolio-filters" class="flex flex-wrap justify-center gap-2 mb-10">
+                <button class="filter-btn active px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="all">全部</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="design">設計</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="illustrations">插畫</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="sketches">速寫</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="watercolor">水彩</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="paintings">油畫</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="3d">立體作品</button>
+            </div>
+
+            <!-- Gallery -->
+            <div id="gallery-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Gallery items will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="page-contact" class="page-section">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-serif text-yellow-900">聯絡我</h2>
+                    <p class="mt-2 text-stone-600">Contact me</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <form action="https://formspree.io/f/myzjngjz" method="POST" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input type="text" name="name" class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none" placeholder="您的姓名" required>
+                            <input type="email" name="email" class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none" placeholder="您的Email" required>
+                        </div>
+                        <div>
+                            <input type="text" name="subject" class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none" placeholder="主旨" required>
+                        </div>
+                        <div>
+                            <textarea name="message" class="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 outline-none" rows="6" placeholder="訊息內容" required></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="px-8 py-3 bg-yellow-800 text-white font-bold rounded-full hover:bg-yellow-900 transition-all transform hover:scale-105">送出訊息</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-100 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center text-stone-500">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="https://www.facebook.com/amy77420" target="_blank" class="hover:text-yellow-800 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
+                <a href="https://www.instagram.com/amy77420/" target="_blank" class="hover:text-yellow-800 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.08 2.525c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 7a5 5 0 100 10 5 5 0 000-10zm0-2a7 7 0 110 14 7 7 0 010-14zm4.5-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" /></svg></a>
+                <a href="mailto:amy77420@gmail.com" class="hover:text-yellow-800 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" /><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" /></svg></a>
+            </div>
+            <p>© <span id="current-year"></span> Copyright First Light. All Rights Reserved.</p>
+            <p class="text-sm mt-2">Designed by Jerrystars & Re-created by Gemini</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- Gallery Data ---
+        const galleryData = [
+            { src: './gallery/LeicesterSquare.jpg', title: '英國 倫敦 萊斯特廣場', category: 'sketches', link: 'https://www.instagram.com/p/C5SBMZzvdAG/' },
+            { src: './gallery/Rue-de-l-Etang.jpg', title: '巴黎 蒙馬特街景', category: 'sketches', link: 'https://www.instagram.com/p/C49fOrAPurA/' },
+            { src: './gallery/Karuizawa.jpg', title: '日本 長野縣 輕井澤 小店', category: 'sketches', link: 'https://www.instagram.com/p/C5mw34AvdlM/' },
+            { src: './gallery/IzuOnsenStreet.jpg', title: '日本 靜岡 伊豆溫泉街', category: 'sketches', link: 'https://www.instagram.com/p/Cr2amADvL0q/' },
+            { src: './gallery/DryLeaves.jpg', title: '靜物1', category: 'paintings', link: 'https://www.instagram.com/p/CZ8IPNwvqq7' },
+            { src: './gallery/DressingTable.jpg', title: '靜物2', category: 'paintings', link: 'https://www.instagram.com/p/CZ8IJasvj62' },
+            { src: './gallery/RuralLife.jpg', title: '風景1', category: 'paintings', link: 'https://www.instagram.com/p/CZ8ICvzP0mY' },
+            { src: './gallery/RiverSide.jpg', title: '風景2', category: 'paintings', link: 'https://www.instagram.com/p/CZ8H9FNPofU' },
+            { src: './gallery/AnimalFamily.jpg', title: '黏土1', category: '3d', link: 'https://www.instagram.com/p/Cq7YqNqPIEP' },
+            { src: './gallery/Loom.jpg', title: '黏土2', category: '3d', link: 'https://www.instagram.com/p/Cq7YB4NP0oZ' },
+            { src: './gallery/Bouquet.jpg', title: '黏土3', category: '3d', link: 'https://www.instagram.com/p/Cq7XuPdP5oT' },
+            { src: './gallery/AnimalBed.jpg', title: '黏土4', category: '3d', link: 'https://www.instagram.com/p/CZ8JRf9PYlQ' },
+        ];
+
+        const galleryContainer = document.getElementById('gallery-container');
+
+        function renderGallery(filter = 'all') {
+            galleryContainer.innerHTML = '';
+            const filteredData = filter === 'all' 
+                ? galleryData 
+                : galleryData.filter(item => item.category === filter);
+
+            filteredData.forEach(item => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item group relative aspect-w-1 aspect-h-1 overflow-hidden rounded-lg shadow-md cursor-pointer';
+                galleryItem.innerHTML = `
+                    <img src="${item.src}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/600x600/f5f5f4/a16207?text=Image+Not+Found';">
+                    <div class="overlay absolute inset-0 bg-black bg-opacity-60 flex flex-col justify-end p-4 text-white">
+                        <h3 class="font-serif font-bold text-lg">${item.title}</h3>
+                        <a href="${item.link}" target="_blank" class="text-sm mt-1 hover:underline">查看詳情 →</a>
+                    </div>
+                `;
+                galleryContainer.appendChild(galleryItem);
+            });
+        }
+        
+        // --- Page Navigation ---
+        const pageLinks = document.querySelectorAll('.page-link');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.page-section');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function showPage(pageId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            const activePage = document.getElementById('page-' + pageId);
+            if (activePage) {
+                activePage.classList.add('active');
+            }
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === `#${pageId}`) {
+                    link.classList.add('active');
+                }
+            });
+            // Close mobile menu on navigation
+            mobileMenu.classList.add('hidden');
+        }
+
+        pageLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageId = this.getAttribute('href').substring(1);
+                window.location.hash = pageId;
+            });
+        });
+
+        function handleHashChange() {
+            const hash = window.location.hash.substring(1) || 'home';
+            showPage(hash);
+        }
+        
+        window.addEventListener('hashchange', handleHashChange);
+
+        // --- Portfolio Filtering ---
+        const filterButtons = document.querySelectorAll('#portfolio-filters .filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.getAttribute('data-filter');
+                renderGallery(filter);
+            });
+        });
+
+        // --- Mobile Menu Toggle ---
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Footer Year ---
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // --- Initial Load ---
+        handleHashChange(); // Show page based on initial hash
+        renderGallery(); // Initial gallery render
+    });
+    </script>
+</body>
+</html>
