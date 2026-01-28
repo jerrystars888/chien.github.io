@@ -64,6 +64,67 @@
            background-color: #a16207;
            color: white;
         }
+        /* 影片響應式容器 */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            background-color: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        /* 商店卡片按鈕樣式 */
+        .btn-shop {
+            background-color: #b48b5e; /* 模仿圖片中的淺棕色 */
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-shop:hover {
+            background-color: #8d6b46;
+        }
+        /* 購物車側邊欄動畫 */
+        #cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #cart-sidebar.open {
+            transform: translateX(0);
+        }
+        /* 數量徽章動畫 */
+        .badge-pop {
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); }
+            100% { transform: scale(1); }
+        }
+        /* 通知 Toast 動畫 */
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 0.3s ease-out;
+        }
+        .toast-exit {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast-exit-active {
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.3s ease-in;
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-stone-800">
@@ -72,24 +133,43 @@
     <header class="bg-stone-50/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#home" class="flex items-center space-x-2 page-link">
-                <img src="./gallery/color-palette.png" alt="調色盤 Logo" class="w-8 h-8">
+                <img src="./gallery/color-palette.png" alt="調色盤 Logo" class="w-8 h-8" onerror="this.style.display='none'">
                 <h1 class="text-2xl font-serif font-bold text-yellow-900">First Light</h1>
             </a>
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="#home" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">首頁</a>
-                <a href="#about" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">關於</a>
-                <a href="#portfolio" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">作品集</a>
-                <a href="#contact" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">聯絡</a>
-            </nav>
-            <button id="mobile-menu-button" class="md:hidden text-stone-800">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
+
+            <!-- Right Side Controls (Nav + Cart + Mobile Menu) -->
+            <div class="flex items-center gap-6">
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">首頁</a>
+                    <a href="#about" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">關於</a>
+                    <a href="#portfolio" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">作品集</a>
+                    <a href="#tutorials" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">教學影片</a>
+                    <a href="#shop" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">商店</a>
+                    <a href="#contact" class="nav-link page-link text-stone-600 hover:text-yellow-800 transition-colors">聯絡</a>
+                </nav>
+
+                <!-- Cart Button -->
+                <button id="cart-btn" class="relative group p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-600 group-hover:text-yellow-800 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-yellow-800 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full opacity-0 transition-opacity duration-300">0</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-stone-800">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
         </div>
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 bg-stone-50 border-t border-stone-200">
             <a href="#home" class="block py-2 nav-link page-link">首頁</a>
             <a href="#about" class="block py-2 nav-link page-link">關於</a>
             <a href="#portfolio" class="block py-2 nav-link page-link">作品集</a>
+            <a href="#tutorials" class="block py-2 nav-link page-link">教學影片</a>
+            <a href="#shop" class="block py-2 nav-link page-link">商店</a>
             <a href="#contact" class="block py-2 nav-link page-link">聯絡</a>
         </div>
     </header>
@@ -165,6 +245,61 @@
             </div>
         </section>
 
+        <!-- Tutorials Section -->
+        <section id="page-tutorials" class="page-section">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-serif text-yellow-900">教學影片</h2>
+                <p class="mt-2 text-stone-600">Video Tutorials</p>
+            </div>
+            
+            <!-- Video Filters -->
+            <div id="video-filters" class="flex flex-wrap justify-center gap-2 mb-10">
+                <button class="filter-btn active px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="all">全部</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="design">設計</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="illustrations">插畫</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="sketches">速寫</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="watercolor">水彩</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="paintings">油畫</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="3d">立體作品</button>
+                <button class="filter-btn px-4 py-2 text-sm rounded-full border border-stone-300 hover:bg-yellow-800 hover:text-white transition-colors" data-filter="digital">電繪</button>
+            </div>
+
+            <!-- Video Grid -->
+            <div id="video-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Video items will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- Shop Section -->
+        <section id="page-shop" class="page-section">
+            <div class="container mx-auto px-4 lg:px-12">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-serif text-yellow-900">商店</h2>
+                    <p class="mt-2 text-stone-600">Shop Resources</p>
+                </div>
+                
+                <!-- Shop Toolbar (Top Bar) -->
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 px-2 border-b border-stone-200 pb-4">
+                    <p class="text-stone-500 text-sm mb-4 md:mb-0">顯示所有 <span id="shop-count">0</span> 筆結果</p>
+                    <div class="relative">
+                        <select id="shop-sort" class="appearance-none bg-white border border-stone-300 text-stone-600 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:border-yellow-800 focus:ring-1 focus:ring-yellow-800 text-sm cursor-pointer hover:border-stone-400 transition-colors">
+                            <option value="latest">依最新項目排序</option>
+                            <option value="price-asc">依價格排序: 低至高</option>
+                            <option value="price-desc">依價格排序: 高至低</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-stone-600">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shop Grid -->
+                <div id="shop-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+                    <!-- Shop items will be injected by JS -->
+                </div>
+            </div>
+        </section>
+
         <!-- Contact Section -->
         <section id="page-contact" class="page-section">
             <div class="max-w-3xl mx-auto">
@@ -199,13 +334,78 @@
         <div class="container mx-auto px-6 py-8 text-center text-stone-500">
             <div class="flex justify-center space-x-6 mb-4">
                 <a href="https://www.facebook.com/amy77420" target="_blank" class="hover:text-yellow-800 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" /></svg></a>
-                <a href="https://www.instagram.com/amy77420/" target="_blank" class="hover:text-yellow-800 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.08 2.525c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 7a5 5 0 100 10 5 5 0 000-10zm0-2a7 7 0 110 14 7 7 0 010-14zm4.5-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" /></svg></a>
+                <a href="https://www.instagram.com/amy77420/" target="_blank" class="hover:text-yellow-800 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.153 1.772c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.012-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.08 2.525c.636-.247 1.363-.416 2.427-.465C9.53 2.013 9.884 2 12.315 2zM12 7a5 5 0 100 10 5 5 0 000-10zm0-2a7 7 0 110 14 7 7 0 010-14zm4.5-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" /></svg></a>
                 <a href="mailto:amy77420@gmail.com" class="hover:text-yellow-800 transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" /><path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" /></svg></a>
             </div>
             <p>© <span id="current-year"></span> Copyright First Light. All Rights Reserved.</p>
             <p class="text-sm mt-2">Designed by <a href="https://www.instagram.com/jerrystars_04.21/" target="_blank" class="text-yellow-800 hover:underline">Jerrystars</a> & Re-created by <a href="https://gemini.google.com/" target="_blank" class="text-yellow-800 hover:underline">Gemini</a></p>
         </div>
     </footer>
+
+    <!-- Cart Sidebar Modal -->
+    <div id="cart-modal" class="fixed inset-0 z-[60] invisible">
+        <!-- Overlay -->
+        <div id="cart-overlay" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        
+        <!-- Sidebar -->
+        <div id="cart-sidebar" class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
+            <!-- Cart Header -->
+            <div class="px-6 py-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                <h2 class="text-xl font-serif text-yellow-900 font-bold flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    購物車
+                </h2>
+                <button id="close-cart" class="text-stone-400 hover:text-stone-600 transition-colors p-2 rounded-full hover:bg-stone-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            
+            <!-- Cart Items Area -->
+            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Empty State (Default) -->
+                <div class="h-full flex flex-col items-center justify-center text-stone-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                    <p>您的購物車是空的</p>
+                    <button onclick="window.location.hash='shop'; document.getElementById('close-cart').click()" class="mt-4 text-yellow-800 font-bold hover:underline">去逛逛商店</button>
+                </div>
+            </div>
+
+            <!-- Cart Footer -->
+            <div class="border-t border-stone-200 p-6 bg-stone-50">
+                <div class="flex justify-between text-lg font-bold mb-4 text-stone-800">
+                    <span>總計</span>
+                    <span id="cart-total">NT$0</span>
+                </div>
+                <button onclick="alert('感謝您的測試！這是一個演示網站，尚未連接真實金流。')" class="w-full bg-[#b48b5e] text-white py-3 rounded font-bold hover:bg-[#8d6b46] transition-colors shadow-md transform active:scale-95">
+                    前往結帳
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Options Modal (New) -->
+    <div id="options-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeOptionsModal()"></div>
+        <!-- Modal Content -->
+        <div class="bg-white rounded-lg shadow-xl z-10 w-full max-w-sm mx-4 overflow-hidden transform transition-all scale-100">
+            <div class="p-4 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                <h3 id="options-modal-title" class="font-bold text-stone-800 text-lg">選擇規格</h3>
+                <button onclick="closeOptionsModal()" class="text-stone-400 hover:text-stone-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="options-list" class="p-4 space-y-3">
+                <!-- Options injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast (New) -->
+    <div id="toast-notification" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-stone-800 text-white px-6 py-3 rounded-full shadow-lg z-[80] transition-all duration-300 translate-y-24 opacity-0 flex items-center space-x-2">
+        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span>已加入購物車</span>
+    </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -226,8 +426,83 @@
             { src: './gallery/AnimalBed.jpg', title: '黏土4<br>Clay 4', category: '3d', link: 'https://www.instagram.com/p/CZ8JRf9PYlQ' },
         ];
 
-        const galleryContainer = document.getElementById('gallery-container');
+        // --- Video Data ---
+        const videoData = [
+            { id: '', title: '設計教學範例<br>Design Tutorial', category: 'design' },
+            { id: '', title: '插畫教學範例<br>Illustration Tutorial', category: 'illustrations' },
+            { id: '', title: '速寫教學範例<br>Sketching Tutorial', category: 'sketches' },
+            { id: '', title: '水彩教學範例<br>Watercolor Tutorial', category: 'watercolor' },
+            { id: '', title: '油畫教學範例<br>Oil Painting Tutorial', category: 'paintings' },
+            { id: '', title: '立體作品教學範例<br>3D Art Tutorial', category: '3d' },
+            { id: '', title: '電繪教學範例<br>Digital Art Tutorial', category: 'digital' },
+        ];
 
+        // --- Shop Data (Enhanced) ---
+        // 加入 options 欄位
+        let shopData = [
+            { 
+                id: 1,
+                title: 'Procreate 3D 頭模型', 
+                price: 'NT$0', 
+                priceValue: 0,
+                btnText: '加入購物車',
+                img: 'https://placehold.co/400x400/cbd5e1/475569?text=Head+Model' 
+            },
+            { 
+                id: 2,
+                title: '線稿練習檔 (含示範影片)', 
+                price: 'NT$0 - NT$490', 
+                priceValue: 0, // 排序用，取最低價
+                btnText: '選擇規格',
+                img: 'https://placehold.co/400x400/1e3a8a/bfdbfe?text=Starry+Night',
+                options: [
+                    { name: '免費版 (Free)', price: 0, priceStr: 'NT$0' },
+                    { name: '贊助版 (Sponsor)', price: 490, priceStr: 'NT$490' }
+                ]
+            },
+            { 
+                id: 3,
+                title: 'YUANCHi - Procreate 自然元素筆刷組', 
+                price: 'NT$200', 
+                priceValue: 200,
+                btnText: '加入購物車',
+                img: 'https://placehold.co/400x400/dcfce7/166534?text=Nature+Brushes' 
+            },
+            { 
+                id: 4,
+                title: 'YUANCHi 常用 Procreate 筆刷組', 
+                price: 'NT$0', 
+                priceValue: 0,
+                btnText: '加入購物車',
+                img: 'https://placehold.co/400x400/60a5fa/eff6ff?text=Brush+Set' 
+            },
+        ];
+
+        // 購物車狀態
+        let cart = [];
+
+        const galleryContainer = document.getElementById('gallery-container');
+        const videoContainer = document.getElementById('video-container');
+        const shopContainer = document.getElementById('shop-container');
+        
+        // Cart Elements
+        const cartBtn = document.getElementById('cart-btn');
+        const cartCountBadge = document.getElementById('cart-count');
+        const cartModal = document.getElementById('cart-modal');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalEl = document.getElementById('cart-total');
+
+        // Options Modal Elements
+        const optionsModal = document.getElementById('options-modal');
+        const optionsList = document.getElementById('options-list');
+
+        // Notification Toast
+        const toastNotification = document.getElementById('toast-notification');
+
+        // --- Render Functions ---
         function renderGallery(filter = 'all') {
             galleryContainer.innerHTML = '';
             const filteredData = filter === 'all' 
@@ -247,6 +522,246 @@
                 galleryContainer.appendChild(galleryItem);
             });
         }
+
+        function renderVideos(filter = 'all') {
+            videoContainer.innerHTML = '';
+            const filteredData = filter === 'all' 
+                ? videoData 
+                : videoData.filter(item => item.category === filter);
+
+            filteredData.forEach(item => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+                videoItem.innerHTML = `
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/${item.id}" title="${item.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <div class="p-4">
+                         <h3 class="font-serif font-bold text-lg text-yellow-900 mb-1">${item.title}</h3>
+                         <span class="text-xs font-medium px-2 py-1 bg-stone-200 text-stone-600 rounded-full">${getCategoryName(item.category)}</span>
+                    </div>
+                `;
+                videoContainer.appendChild(videoItem);
+            });
+        }
+
+        function renderShop(data = shopData) {
+            if (!shopContainer) return;
+            document.getElementById('shop-count').textContent = data.length;
+            shopContainer.innerHTML = '';
+
+            data.forEach(item => {
+                const shopItem = document.createElement('div');
+                shopItem.className = 'flex flex-col group'; 
+                
+                // Determine onclick action: Open Options or Add to Cart directly
+                let btnAction = '';
+                if (item.options && item.options.length > 0) {
+                     btnAction = `onclick="openOptionsModal(${item.id})"`;
+                } else {
+                     btnAction = `onclick="addToCart(${item.id})"`;
+                }
+
+                shopItem.innerHTML = `
+                    <div class="relative w-full aspect-square overflow-hidden mb-4 bg-stone-100 rounded-none shadow-sm group-hover:shadow-md transition-shadow">
+                        <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:opacity-90 transition-opacity">
+                    </div>
+                    <h3 class="font-medium text-stone-800 text-lg mb-1 leading-snug">${item.title}</h3>
+                    <p class="text-stone-500 font-bold mb-4 text-sm">${item.price}</p>
+                    <button ${btnAction} class="mt-auto w-fit px-6 py-2 btn-shop text-sm font-bold rounded hover:bg-opacity-90 transition-colors shadow-sm">
+                        ${item.btnText}
+                    </button>
+                `;
+                shopContainer.appendChild(shopItem);
+            });
+        }
+
+        // --- Sort Logic ---
+        document.getElementById('shop-sort').addEventListener('change', function(e) {
+            const sortType = e.target.value;
+            let sortedData = [...shopData]; 
+
+            if (sortType === 'price-asc') {
+                sortedData.sort((a, b) => a.priceValue - b.priceValue);
+            } else if (sortType === 'price-desc') {
+                sortedData.sort((a, b) => b.priceValue - a.priceValue);
+            } 
+            renderShop(sortedData);
+        });
+
+        // --- Options Modal Logic ---
+        function openOptionsModal(id) {
+            const product = shopData.find(item => item.id === id);
+            if (!product || !product.options) return;
+
+            document.getElementById('options-modal-title').textContent = product.title;
+            optionsList.innerHTML = '';
+
+            product.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left px-4 py-3 rounded border border-stone-200 hover:border-yellow-800 hover:bg-yellow-50 transition-colors flex justify-between items-center group';
+                btn.innerHTML = `
+                    <span class="font-medium text-stone-700 group-hover:text-yellow-900">${option.name}</span>
+                    <span class="font-bold text-stone-500 group-hover:text-yellow-800">${option.priceStr}</span>
+                `;
+                // 點擊後加入購物車，並傳入選項
+                btn.onclick = function() {
+                    addToCart(id, option);
+                    closeOptionsModal();
+                };
+                optionsList.appendChild(btn);
+            });
+
+            optionsModal.classList.remove('hidden');
+        }
+
+        function closeOptionsModal() {
+            optionsModal.classList.add('hidden');
+        }
+
+        // Expose to window
+        window.openOptionsModal = openOptionsModal;
+        window.closeOptionsModal = closeOptionsModal;
+
+
+        // --- Cart Logic ---
+        function addToCart(id, option = null) {
+            const product = shopData.find(item => item.id === id);
+            
+            // 建立商品在購物車內的唯一識別碼 (處理多規格)
+            let uniqueId = product.id.toString();
+            let cartItemTitle = product.title;
+            let cartItemPrice = product.priceValue;
+            let cartItemDisplayPrice = product.price;
+
+            if (option) {
+                uniqueId = `${product.id}-${option.name}`;
+                cartItemTitle = `${product.title} - ${option.name}`;
+                cartItemPrice = option.price;
+                cartItemDisplayPrice = option.priceStr;
+            }
+
+            const existingItem = cart.find(item => item.uniqueId === uniqueId);
+
+            if (existingItem) {
+                existingItem.qty++;
+            } else {
+                cart.push({ 
+                    ...product, 
+                    uniqueId: uniqueId, 
+                    title: cartItemTitle,
+                    priceValue: cartItemPrice,
+                    price: cartItemDisplayPrice,
+                    qty: 1 
+                });
+            }
+            updateCartUI();
+            showToast(); // 顯示提示通知，而不開啟購物車
+        }
+
+        // 顯示加入購物車的 Toast 提示
+        function showToast() {
+            toastNotification.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toastNotification.classList.add('translate-y-24', 'opacity-0');
+            }, 2000);
+        }
+
+        // Expose to window so onclick works
+        window.addToCart = addToCart;
+
+        function removeFromCart(uniqueId) {
+            // 注意：這裡 uniqueId可能是字串或數字，統一處理
+            cart = cart.filter(item => item.uniqueId.toString() !== uniqueId.toString());
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            // Update Badge
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCountBadge.textContent = totalQty;
+            
+            // Badge Animation
+            if (totalQty > 0) {
+                cartCountBadge.classList.remove('opacity-0');
+                cartCountBadge.classList.add('badge-pop');
+                setTimeout(() => cartCountBadge.classList.remove('badge-pop'), 300);
+            } else {
+                cartCountBadge.classList.add('opacity-0');
+            }
+
+            // Update Sidebar Items
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-stone-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                        <p>您的購物車是空的</p>
+                        <button onclick="window.location.hash='shop'; document.getElementById('close-cart').click()" class="mt-4 text-yellow-800 font-bold hover:underline">去逛逛商店</button>
+                    </div>`;
+            } else {
+                cartItemsContainer.innerHTML = '';
+                let total = 0;
+                cart.forEach(item => {
+                    const itemTotal = item.priceValue * item.qty;
+                    total += itemTotal;
+                    
+                    const el = document.createElement('div');
+                    el.className = 'flex items-center gap-4 bg-white p-2 rounded shadow-sm border border-stone-100';
+                    el.innerHTML = `
+                        <img src="${item.img}" class="w-16 h-16 object-cover rounded bg-stone-100">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-stone-800 truncate text-sm" title="${item.title}">${item.title}</h4>
+                            <p class="text-xs text-stone-500">${item.price}</p>
+                            <div class="text-xs mt-1">數量: <span class="font-bold text-yellow-900">${item.qty}</span></div>
+                        </div>
+                        <button onclick="window.removeItem('${item.uniqueId}')" class="text-stone-400 hover:text-red-500 p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                        </button>
+                    `;
+                    cartItemsContainer.appendChild(el);
+                });
+                cartTotalEl.textContent = `NT$${total}`;
+            }
+        }
+
+        // Expose remove function to window for inline onclick
+        window.removeItem = removeFromCart;
+
+        // --- Cart Modal Interactions ---
+        function openCart() {
+            cartModal.classList.remove('invisible');
+            // Small delay to allow transition
+            setTimeout(() => {
+                cartOverlay.classList.remove('opacity-0');
+                cartSidebar.classList.add('open');
+            }, 10);
+        }
+
+        function closeCart() {
+            cartOverlay.classList.add('opacity-0');
+            cartSidebar.classList.remove('open');
+            setTimeout(() => {
+                cartModal.classList.add('invisible');
+            }, 300);
+        }
+
+        cartBtn.addEventListener('click', openCart);
+        closeCartBtn.addEventListener('click', closeCart);
+        cartOverlay.addEventListener('click', closeCart);
+
+        // Helper to get display name for category
+        function getCategoryName(cat) {
+            const map = {
+                'design': '設計',
+                'illustrations': '插畫',
+                'watercolor': '水彩',
+                'sketches': '速寫',
+                'digital': '電繪',
+                'paintings': '油畫',
+                '3d': '立體作品'
+            };
+            return map[cat] || '其他';
+        }
         
         // --- Page Navigation ---
         const pageLinks = document.querySelectorAll('.page-link');
@@ -262,6 +777,8 @@
             const activePage = document.getElementById('page-' + pageId);
             if (activePage) {
                 activePage.classList.add('active');
+            } else {
+                document.getElementById('page-home').classList.add('active');
             }
 
             navLinks.forEach(link => {
@@ -270,7 +787,6 @@
                     link.classList.add('active');
                 }
             });
-            // Close mobile menu on navigation
             mobileMenu.classList.add('hidden');
         }
 
@@ -289,7 +805,7 @@
         
         window.addEventListener('hashchange', handleHashChange);
 
-        // --- Portfolio Filtering ---
+        // --- Filters (Portfolio & Video) ---
         const filterButtons = document.querySelectorAll('#portfolio-filters .filter-btn');
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
@@ -300,17 +816,27 @@
             });
         });
 
-        // --- Mobile Menu Toggle ---
+        const videoFilterButtons = document.querySelectorAll('#video-filters .filter-btn');
+        videoFilterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                videoFilterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.getAttribute('data-filter');
+                renderVideos(filter);
+            });
+        });
+
         mobileMenuButton.addEventListener('click', function() {
             mobileMenu.classList.toggle('hidden');
         });
 
-        // --- Footer Year ---
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
         // --- Initial Load ---
-        handleHashChange(); // Show page based on initial hash
-        renderGallery(); // Initial gallery render
+        handleHashChange(); 
+        renderGallery(); 
+        renderVideos(); 
+        renderShop(); // 預設載入
     });
     </script>
 </body>
