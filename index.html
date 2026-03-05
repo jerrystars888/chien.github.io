@@ -431,6 +431,18 @@
             
             <!-- 內容區塊 -->
             <div class="p-6 overflow-y-auto">
+                <!-- 截圖提示區塊 (新增) -->
+                <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 mb-6 rounded-r text-sm text-stone-700 shadow-sm">
+                    <div class="flex items-start">
+                        <!-- 相機 Icon -->
+                        <svg class="w-5 h-5 text-yellow-600 mr-2 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <div>
+                            <p class="font-bold text-yellow-800 mb-1">請務必截圖此畫面！</p>
+                            <p>為方便確認您購買的商品，請將<strong class="text-yellow-800">此明細截圖</strong>連同匯款後五碼傳送至 LINE。</p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 購買明細 -->
                 <h4 class="font-bold text-stone-700 mb-3 border-b border-stone-200 pb-2">購買明細</h4>
                 <div id="checkout-items" class="space-y-2 mb-4 text-stone-600">
@@ -453,7 +465,7 @@
                 <!-- LINE QR Code 聯絡對帳 -->
                 <h4 class="font-bold text-stone-700 mb-3 border-b border-stone-200 pb-2">聯絡與對帳</h4>
                 <div class="flex flex-col items-center justify-center text-sm text-stone-600">
-                    <p class="mb-3 text-center">匯款完成後，請掃描下方 QR Code 加入 LINE，<br>並傳送您的「<span class="text-yellow-800 font-bold">匯款帳號後五碼</span>」以便我們為您對帳。</p>
+                    <p class="mb-3 text-center">匯款完成後，請掃描下方 QR Code 加入 LINE，<br>並傳送「<span class="text-yellow-800 font-bold">本畫面截圖</span>」及您的「<span class="text-yellow-800 font-bold">匯款帳號後五碼</span>」，<br>以便我們為您確認購買品項並對帳。</p>
                     <img src="https://placehold.co/150x150/16a34a/white?text=LINE+QR" alt="LINE QR Code" class="w-36 h-36 rounded-lg border border-stone-200 shadow-sm">
                 </div>
             </div>
@@ -462,6 +474,25 @@
             <div class="p-4 border-t border-stone-100 bg-stone-50 text-center">
                 <button onclick="closeCheckout()" class="w-full py-2 bg-[#b48b5e] text-white font-bold rounded-lg hover:bg-[#8d6b46] transition-colors">確認並關閉</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal (空購物車提示視窗) -->
+    <div id="alert-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center">
+        <!-- 黑色半透明背景 -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeAlert()"></div>
+        <!-- 視窗內容 -->
+        <div class="bg-white rounded-lg shadow-xl z-10 w-full max-w-sm mx-4 overflow-hidden transform transition-all p-6 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 mb-4">
+                <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <h3 class="text-lg leading-6 font-bold text-stone-900 mb-2 font-serif">購物車是空的</h3>
+            <p class="text-sm text-stone-500 mb-6">您的購物車內目前沒有商品，請先至商店選購！</p>
+            <button onclick="closeAlert()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-[#b48b5e] text-base font-bold text-white hover:bg-[#8d6b46] focus:outline-none transition-colors sm:text-sm">
+                我知道了
+            </button>
         </div>
     </div>
 
@@ -813,10 +844,16 @@
         closeCartBtn.addEventListener('click', closeCart);
         cartOverlay.addEventListener('click', closeCart);
 
+        // --- Alert Modal Interactions ---
+        window.closeAlert = function() {
+            document.getElementById('alert-modal').classList.add('hidden');
+        };
+
         // --- Checkout Modal Interactions (結帳功能邏輯) ---
         document.getElementById('btn-checkout').addEventListener('click', () => {
             if (cart.length === 0) {
-                alert('您的購物車內目前沒有商品，請先至商店選購！');
+                // 將原本的 alert() 換成自訂的 UI 視窗
+                document.getElementById('alert-modal').classList.remove('hidden');
                 return;
             }
             
